@@ -18,6 +18,9 @@ class Shop(Base):
     id = sq.Column(sq.Integer, primary_key=True)
     name = sq.Column(sq.String(length=40),unique=True)
 
+    def __str__(self):
+        return f'Shop: {self.id}, {self.name}'
+
 class Book(Base):
     __tablename__ = 'book'
     id = sq.Column(sq.Integer, primary_key=True)
@@ -61,7 +64,13 @@ def init_test_data(session):
         session.add(model(id=record.get('pk'),**record.get('fields')))
     session.commit()
 
+#Задание 2
+# Используя SQLAlchemy, составить запрос выборки магазинов, продающих целевого издателя.
 
+def select_shops_on_publisher(session, publisher_name):
+    result = session.query(Shop).join(Stock).join(Book).join(Publisher).filter(Publisher.name == publisher_name).all()
+    for i in result:
+        print(i)
 
 
 
